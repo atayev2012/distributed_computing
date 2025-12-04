@@ -21,10 +21,9 @@ int main(int argc, char** argv) {
     long long local_points = total_points / comm_size;
     
     Timer timer;
+    srand(time(NULL));
     
     MPI_Barrier(MPI_COMM_WORLD);
-    
-    srand(time(NULL));
 
     timer_start(&timer);
 
