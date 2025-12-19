@@ -7,6 +7,11 @@
 Файлы:
 `./task_1/mandelbrot.c`
 
+### Производительность
+<img src=img/speedup_vs_threads.png alt="speedup vs threads">
+<img src=img/time_vs_points.png alt="time vs points">
+
+
 ## Задача №3
 Создать свою реализацию типа rwlock и функций rdlock,
 wrlock блокировки чтения-записи. Апробировать эту реализацию
