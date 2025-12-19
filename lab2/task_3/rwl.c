@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../include/rwlock.h"
+#include "../include/rwl.h"
 
 // Read lock implementation
 void rdlock(my_rwlock_t* p)

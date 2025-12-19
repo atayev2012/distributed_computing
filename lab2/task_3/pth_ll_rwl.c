@@ -4,7 +4,7 @@
 
 #include "../include/my_rand.h"
 #include "../include/timer.h"
-#include "../include/rwlock.h"
+#include "../include/rwl.h"
 
 /* Random ints are less than MAX_KEY */
 const int MAX_KEY = 100000000;
