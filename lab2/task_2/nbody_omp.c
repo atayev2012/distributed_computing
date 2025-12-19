@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Usage: %s [t_end] [input_file] [nthreads]\n", argv[0]);
         return 1;
     }
-
+    // default thread_count 
     int thread_count = 1;
 
     if (argc == 4) {
