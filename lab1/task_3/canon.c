@@ -3,13 +3,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-void read_size(int *n_p, int my_rank, MPI_Comm comm)
-{
-    if (my_rank == 0)
-        scanf("%d", n_p);
-
-    MPI_Bcast(n_p, 1, MPI_INT, 0, comm);
-}
+#include "../include/timer.h"
 
 void read_matrix(double *local_matrix, int block_size, int n, int my_rank, int grid_size, MPI_Comm comm)
 {
@@ -133,12 +127,14 @@ void cannon_multiply(double *local_A, double *local_B, double *local_C, int bloc
     MPI_Comm_free(&grid_comm);
 }
 
-int main()
+int main(int argc, char** argv)
 {
-    int my_rank;
+    int my_rank, n = 10;
     int comm_size;
-    double start, finish;
-    double time_elapsed, total_time_elapsed = 0.0;
+    double elapsed, total_time_elapsed = 0.0;
+
+    if (argc > 1)
+        n = atoi(argv[1]);
 
     MPI_Init(NULL, NULL);
 
@@ -153,9 +149,6 @@ int main()
         MPI_Finalize();
         return 0;
     }
-
-    int n;
-    read_size (&n, my_rank, MPI_COMM_WORLD);
 
     int block_size = n / grid_size;
 
@@ -175,14 +168,17 @@ int main()
     read_matrix(local_matrix_B, block_size, n, my_rank, grid_size, MPI_COMM_WORLD);
 
     MPI_Barrier(MPI_COMM_WORLD);
-    start = MPI_Wtime();
+    Timer timer;
+    timer_start(&timer);
 
     cannon_multiply(local_matrix_A, local_matrix_B, local_matrix_C, block_size, n, my_rank, grid_size, MPI_COMM_WORLD);
 
     MPI_Barrier(MPI_COMM_WORLD);
-    finish = MPI_Wtime();
-    time_elapsed = finish - start;
-    MPI_Reduce(&time_elapsed, &total_time_elapsed, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
+    
+    timer_stop(&timer);
+    elapsed = time_elapsed(&timer);
+
+    MPI_Reduce(&elapsed, &total_time_elapsed, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
 
     print_matrix(local_matrix_C, block_size, n, my_rank, grid_size, MPI_COMM_WORLD);
     if (my_rank == 0)
